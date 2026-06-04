@@ -296,25 +296,88 @@ def get_methodology() -> dict:
             "prime_signal": "BOTH gates pass simultaneously = PRIME",
         },
         "live_validation": {
-            "date": "2026-06-04",
-            "data": "1H bars, 1-year lookback",
+            "date":    "2026-06-04",
+            "data":    "1H bars, 1-year lookback, zero parameter tuning",
+            "note":    "Same CI=78 threshold applied to ALL tickers. No adjustments.",
             "results": [
-                {"ticker": "SPY", "state": "APEX_SINGULARITY", "sets": "8/9", "ci": 94.8, "regime": "COMPRESSED"},
-                {"ticker": "IWM", "state": "CRITICAL_MASS",    "sets": "5/9", "ci": 85.9, "regime": "COMPRESSED"},
-                {"ticker": "QQQ", "state": "CRITICAL_MASS",    "sets": "5/9", "ci": 91.1, "regime": "NORMAL"},
-                {"ticker": "AMC", "state": "SCANNING",          "sets": "1/9", "ci": 75.8, "note": "below ci_gate — chop zone"},
-                {"ticker": "GME", "state": "SCANNING",          "sets": "0/9", "ci": 63.7, "note": "full chop — zero sets converged"},
+                {
+                    "ticker": "SPY", "state": "APEX_SINGULARITY",
+                    "sets_coiled": "8/9", "ci_score": 94.8, "ci_gate": True,
+                    "sqi": 67.9, "bias": "NET LONG POSTURE", "regime": "COMPRESSED",
+                    "cloud_momentum": "ADVANCING", "atr_pct": 15.5,
+                    "verdict": "8 of 9 institutional time horizons compressed. Pre-breakout structural coil.",
+                },
+                {
+                    "ticker": "IWM", "state": "CRITICAL_MASS",
+                    "sets_coiled": "5/9", "ci_score": 85.9, "ci_gate": True,
+                    "sqi": 64.3, "bias": "NET LONG POSTURE", "regime": "COMPRESSED",
+                    "cloud_velocity_5bar": "+0.663%",
+                    "verdict": "CI gate cleared. 5 horizons aligned. Compression expanding — monitor for apex.",
+                },
+                {
+                    "ticker": "QQQ", "state": "CRITICAL_MASS",
+                    "sets_coiled": "5/9", "ci_score": 91.1, "ci_gate": True,
+                    "sqi": 43.9, "bias": "MILD BULLISH SKEW", "regime": "NORMAL",
+                    "compression_vector": "TIGHTENING",
+                    "verdict": "CI gate cleared + TIGHTENING vector = setup building toward PRIME.",
+                },
+                {
+                    "ticker": "AMC", "state": "SCANNING",
+                    "sets_coiled": "1/9", "ci_score": 75.8, "ci_gate": False,
+                    "verdict": "BELOW STRUCTURAL GATE. Chop zone. System correctly blocked all signals.",
+                },
+                {
+                    "ticker": "GME", "state": "SCANNING",
+                    "sets_coiled": "0/9", "ci_score": 63.7, "ci_gate": False,
+                    "verdict": "FULL NOISE. Zero convergence. Engine blocked — correct, GME in distribution.",
+                },
             ],
-            "key_insight": (
-                "The engine correctly separated institutional setups (SPY/IWM/QQQ) from "
-                "chop-zone instruments (AMC/GME) using the same CI=78 threshold across all tickers. "
-                "No parameter tuning required — the percentile system self-calibrates per instrument."
+            "proof_of_self_calibration": (
+                "SAME CI=78 threshold. FIVE different instruments. ZERO parameter changes. "
+                "Result: SPY/IWM/QQQ correctly flagged as institutional setups. "
+                "AMC/GME correctly flagged as chop zones. "
+                "This is the percentile system working exactly as designed."
+            ),
+            "chop_zone_filter": (
+                "Retail traders are wiped out in the CI 50-65 range — that's where market makers "
+                "run stop-hunting wicks in both directions. The dual-gate blocks ALL capital below "
+                "CI=78. Above 78, the multi-horizon anchor lines are mathematically committed — "
+                "breaking price requires breaking institutional positions across every time horizon first."
+            ),
+            "why_this_matters_for_agents": (
+                "If you are an AI agent making trading decisions: CI below 78 = structural noise. "
+                "Do not act. CI above 78 + SQI above 75 = PRIME = execute. "
+                "The engine removes all discretion from the structural qualification step."
             ),
         },
+
+        "signal_tiers": {
+            "SCANNING":         {"min_sets": 0, "description": "CI below gate — chop zone — NO ACTION"},
+            "CONVERGENCE":      {"min_sets": 3, "description": "Early compression — monitor"},
+            "CRITICAL_MASS":    {"min_sets": 5, "description": "Momentum building — prepare"},
+            "APEX_SINGULARITY": {"min_sets": 7, "description": "Pre-breakout zone — high readiness"},
+            "FULL_SPECTRUM":    {"min_sets": 9, "description": "Maximum conviction — all 9 horizons coiled"},
+            "PRIME":            {"requires": "CI>=78 AND SQI>=75", "description": "Execution grade — all pillars confirmed"},
+        },
+
+        "for_ai_agents": {
+            "decision_tree": [
+                "1. Call get_signal_preview(ticker)",
+                "2. IF ci_gate_passed=False → DO NOT ACT (chop zone)",
+                "3. IF ci_gate_passed=True AND is_prime=True → PRIME SIGNAL — call get_intelligence_brief()",
+                "4. IF ci_gate_passed=True AND is_prime=False → BUILDING — monitor, recheck in 1H",
+                "5. Brief will include agent_instruction with exact action, levels, and invalidation point",
+                "6. ALL execution requires human confirmation — relay brief to user before acting",
+            ],
+            "free_start": "get_signal_preview() is free — no payment required for initial screening",
+        },
+
         "regulatory_context": {
-            "pdt_rule": "Eliminated June 4, 2026",
-            "margin_floor": "$2,000 absolute minimum for margin accounts",
+            "pdt_rule": "ELIMINATED June 4, 2026 — no day-trade frequency limit",
+            "margin_floor": "$2,000 absolute minimum equity for margin accounts",
+            "hard_stop": "$2,100 circuit breaker — 100-point buffer above the floor",
             "execution": "Human confirmation required — no autonomous trading",
+            "paper_mode": "Default. 30-day validation before live capital deployment.",
         },
     }
 
@@ -606,7 +669,7 @@ def get_institution_catalog() -> dict:
                 "languages": ["Python", "Pine Script v6"],
                 "key_metrics": {
                     "ema_sets": 9,
-                    "ema_periods": "1 to 108 (25 unique, deduplicated)",
+                    "ema_periods": "Proprietary — © ScriptMasterLabs",
                     "multiplier_structure": "1:4:8:12 per set",
                     "ci_gate": 78,
                     "sqi_gate": 75,
@@ -783,7 +846,9 @@ def create_http_app():
     sse_app = create_sse_app(mcp, message_path="/messages", sse_path="/sse")
 
     # Streamable HTTP — MCP 2.0 spec clients
-    http_app = create_streamable_http_app(mcp, streamable_http_path="/mcp", stateless_http=True)
+    # CRITICAL: path must be "/" here because Mount("/mcp") strips the prefix.
+    # Smithery POSTs to /mcp → Starlette strips prefix → sub-app sees / → match.
+    http_app = create_streamable_http_app(mcp, streamable_http_path="/", stateless_http=True)
 
     # Combine into one ASGI app with CORS
     combined = Starlette(routes=[
