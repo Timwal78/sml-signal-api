@@ -9,4 +9,4 @@ RUN pip install --prefer-binary --no-cache-dir -r requirements.txt
 COPY . .
 
 EXPOSE 8010
-CMD ["sh", "-c", "uvicorn sml_signal_api:app --host 0.0.0.0 --port ${PORT:-8010}"]
+CMD ["sh", "-c", "python mcp_server_sml.py"]
