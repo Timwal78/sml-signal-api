@@ -60,7 +60,7 @@ logger = logging.getLogger("SML-MCP")
 # ─────────────────────────────────────────────────────────────────────────────
 
 mcp = FastMCP(
-    name="ScriptMasterLabs — SML Institutional Signal Engine",
+    name="ScriptMasterLabs - SML Institutional Signal Engine",
     instructions="""
 You are connected to the ScriptMasterLabs SML Institutional Signal Engine.
 
