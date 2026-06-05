@@ -4,7 +4,7 @@ dockerfilePath = "Dockerfile"
 
 [deploy]
 startCommand = "python mcp_server_sml.py"
-healthcheckPath = "/mcp"
-healthcheckTimeout = 300
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 5
+# healthcheckPath removed — /mcp only accepts POST (MCP protocol), not GET.
+# Railway uses TCP liveness check instead, which works correctly.
