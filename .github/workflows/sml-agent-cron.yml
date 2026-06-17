@@ -1,0 +1,23 @@
+name: Autonomous SML Agent (XRPL x402)
+on:
+  schedule:
+    - cron: '0 14 * * 1-5' # 9:00 AM EST Mon-Fri
+  workflow_dispatch:
+
+jobs:
+  execute-agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install Dependencies
+        run: pip install xrpl-py requests
+      - name: Execute Agent Execution Matrix
+        env:
+          XRPL_AGENT_SEED: ${{ secrets.XRPL_AGENT_SEED }}
+          SQUEEZE_OS_ENDPOINT: "https://squeezeos-api.onrender.com"
+          FOUR02PROOF_ENDPOINT: "https://four02proof.onrender.com"
+        run: python agent/sml_agent.py
