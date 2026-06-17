@@ -3,7 +3,7 @@ builder = "dockerfile"
 dockerfilePath = "Dockerfile"
 
 [deploy]
-startCommand = "python mcp_server_sml.py"
+startCommand = "python migrate.py && python mcp_server_sml.py"
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 5
 # healthcheckPath removed — /mcp only accepts POST (MCP protocol), not GET.
