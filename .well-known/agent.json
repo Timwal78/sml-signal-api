@@ -1,0 +1,13 @@
+{
+  "name": "sml-signal-api",
+  "description": "Live market signal processing API for ScriptMasterLabs intelligence platform",
+  "owner": "ScriptMasterLabs",
+  "github": "https://github.com/timwal78/sml-signal-api",
+  "contact": "scriptmasterlabs@gmail.com",
+  "sovereign": {
+    "noMockData": true,
+    "liveDataOnly": true,
+    "noTelemetry": true,
+    "enforcedBy": ".github/workflows/sovereign-data-check.yml"
+  }
+}
